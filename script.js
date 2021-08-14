@@ -4,14 +4,11 @@ const gameModule = (() => {
 })();
 
 const createPlayer = (name) => {
-    players = [];
-    players.push(name);
     const sayHello = () => {
-        console.log(`hello ${players[0]}`)
+        console.log(`hello ${name}`)
     }
-    return { name, players, sayHello };
+    return { name, sayHello };
 }
 
 const gabriel = createPlayer('Gabriel');
-console.log(gabriel.name);
-gabriel.sayHello();
+const jonas = createPlayer(`Jonas`);
