@@ -2,10 +2,21 @@ const game = (() => {
     let players = [];
     let gameboard = ["","","","","","","","",""];
   
-    countX = gameboard.filter(marker => marker === "X").length
-    countO = gameboard.filter(marker => marker === "O").length
+    const updateCounter = () => {
+        countX = gameboard.filter(marker => marker === "X").length
+        countO = gameboard.filter(marker => marker === "O").length
+        return countX, countO
+    }
+    
+    updateCounter();
 
-    return { gameboard, players }
+    const checkForWinner = () => {
+        if (gameboard[0] === gameboard[1] && gameboard[0] === gameboard[2]){
+            console.log('you win')
+        }
+    }
+
+    return { gameboard, players, checkForWinner, updateCounter }
 
 })();
 
@@ -21,18 +32,18 @@ const displayController = (() => {
     boardSquares.forEach( (square) => {
         square.addEventListener('click', (e) => {
             squarePosition = e.target.dataset.square;
+
             if (countX === countO && square.textContent === ""){
                 game.gameboard[squarePosition] = "X";
                 square.textContent = "X"
-                console.log(game.gameboard);
             };
             if (countX > countO && square.textContent === ""){
                 game.gameboard[squarePosition] = "O";
                 square.textContent = "O"
-                console.log(game.gameboard);
             };
-            countX = game.gameboard.filter(marker => marker === "X").length
-            countO = game.gameboard.filter(marker => marker === "O").length
+            
+            game.updateCounter();
+
         });
     });
 
