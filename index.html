@@ -13,14 +13,14 @@
                 <h3>Nicknames</h3>
                 <form>
                     <label for="player1">Player 1:</label>
-                    <input id="player1" type="text">
+                    <input id="player1" type="text" maxlength="14" required>
                     <label for="player2">Player 2:</label>
-                    <input id="player2" type="text">
+                    <input id="player2" type="text" maxlength="14" required>
                 </form>
-                <button>Start</button>
+                <button class="start">Start</button>
             </div>
         </div>
-        <div id="game-board">
+        <div class="show" id="game-board">
             <div class="board-squares" id="item-1" data-square='0'></div>
             <div class="board-squares" id="item-2" data-square='1'></div>
             <div class="board-squares" id="item-3" data-square='2'></div>

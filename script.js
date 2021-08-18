@@ -22,12 +22,15 @@ const game = (() => {
 
 const displayController = (() => {
     boardSquares = document.querySelectorAll('.board-squares');
+    startButton = document.querySelector('.start');
+    initialScreen = document.querySelector('.ask-players-container');
+    gameBoardDiv = document.querySelector('#game-board');
     
-    const fillBoard = (boardSquares) => {
-        for (let i = 0; i < boardSquares.length; i++){
-            boardSquares[i].textContent = game.gameboard[i];
-        }
-    }
+    // const fillBoard = (boardSquares) => {
+    //     for (let i = 0; i < boardSquares.length; i++){
+    //         boardSquares[i].textContent = game.gameboard[i];
+    //     };
+    // };
 
     boardSquares.forEach( (square) => {
         square.addEventListener('click', (e) => {
@@ -46,6 +49,12 @@ const displayController = (() => {
 
         });
     });
+
+    startButton.addEventListener('click', () => {
+        initialScreen.style.animationName = 'slideOut';
+        setTimeout(() => {initialScreen.style.visibility = 'hidden'}, 600);
+        gameBoardDiv.style.visibility = 'visible';
+    })
 
     return { fillBoard }
 
