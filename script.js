@@ -11,8 +11,29 @@ const game = (() => {
     updateCounter();
 
     const checkForWinner = () => {
-        if (gameboard[0] === gameboard[1] && gameboard[0] === gameboard[2]){
-            console.log('you win')
+        if (gameboard[0] != "" && gameboard[0] === gameboard[1] && gameboard[0] === gameboard[2]){
+            return gameboard[0]
+        }
+        if (gameboard[3] != "" && gameboard[3] === gameboard[4] && gameboard[3] === gameboard[5]){
+            return gameboard[3]
+        }
+        if (gameboard[6] != "" && gameboard[6] === gameboard[7] && gameboard[6] === gameboard[8]){
+            return gameboard[6]
+        }
+        if (gameboard[0] != "" && gameboard[0] === gameboard[3] && gameboard[0] === gameboard[6]){
+            return gameboard[0]
+        }
+        if (gameboard[1] != "" && gameboard[1] === gameboard[4] && gameboard[1] === gameboard[7]){
+            return gameboard[1]
+        }
+        if (gameboard[2] != "" && gameboard[2] === gameboard[5] && gameboard[2] === gameboard[8]){
+            return gameboard[2]
+        }
+        if (gameboard[0] != "" && gameboard[0] === gameboard[4] && gameboard[0] === gameboard[8]){
+            return gameboard[0]
+        }
+        if (gameboard[2] != "" && gameboard[2] === gameboard[4] && gameboard[2] === gameboard[5]){
+            return gameboard[2]
         }
     }
 
@@ -25,6 +46,8 @@ const displayController = (() => {
     startButton = document.querySelector('.start');
     initialScreen = document.querySelector('.ask-players-container');
     gameBoardDiv = document.querySelector('#game-board');
+    playerOne = document.querySelector('#player1')
+    playerTwo = document.querySelector('#player2')
     
     // const fillBoard = (boardSquares) => {
     //     for (let i = 0; i < boardSquares.length; i++){
@@ -47,16 +70,25 @@ const displayController = (() => {
             
             game.updateCounter();
 
+            const winner = game.checkForWinner();
+            
+            if (winner != undefined){
+                console.log(winner + ' wins!')
+            }
+
         });
     });
 
-    startButton.addEventListener('click', () => {
+    startButton.addEventListener('click', (e) => {
+        e.preventDefault();
         initialScreen.style.animationName = 'slideOut';
-        setTimeout(() => {initialScreen.style.visibility = 'hidden'}, 600);
+        setTimeout(() => {initialScreen.style.visibility = 'hidden'}, 1000);
         gameBoardDiv.style.visibility = 'visible';
+        createPlayer(`${playerOne.value}`, 'X');
+        createPlayer(`${playerTwo.value}`, 'O');
     })
 
-    return { fillBoard }
+    return { }
 
 })();
 
@@ -64,7 +96,4 @@ const createPlayer = (name, marker) => {
     game.players.push({name, marker});
 
     return { name, marker }
-}
-
-const gabriel = createPlayer('Gabriel', 'X');
-const jonas = createPlayer('Jonas', 'O');
+};
