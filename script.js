@@ -1,6 +1,7 @@
 const game = (() => {
     let players = [];
     let gameboard = ["","","","","","","","",""];
+    let playPossible = true;
   
     const updateCounter = () => {
         countX = gameboard.filter(marker => marker === "X").length
@@ -35,47 +36,54 @@ const game = (() => {
         if (gameboard[2] != "" && gameboard[2] === gameboard[4] && gameboard[2] === gameboard[5]){
             return gameboard[2]
         }
+        if (gameboard.filter(square => square === "").length === 0){
+            return "tie"
+        }
     }
 
-    return { gameboard, players, checkForWinner, updateCounter }
+    return { gameboard, players, checkForWinner, updateCounter, playPossible }
 
 })();
 
 const displayController = (() => {
-    boardSquares = document.querySelectorAll('.board-squares');
-    startButton = document.querySelector('.start');
-    initialScreen = document.querySelector('.ask-players-container');
-    gameBoardDiv = document.querySelector('#game-board');
-    playerOne = document.querySelector('#player1')
-    playerTwo = document.querySelector('#player2')
-    
-    // const fillBoard = (boardSquares) => {
-    //     for (let i = 0; i < boardSquares.length; i++){
-    //         boardSquares[i].textContent = game.gameboard[i];
-    //     };
-    // };
+    const boardSquares = document.querySelectorAll('.board-squares');
+    const startButton = document.querySelector('.start');
+    const initialScreen = document.querySelector('.ask-players-container');
+    const gameBoardDiv = document.querySelector('#game-board');
+    const gameDiv = document.querySelector('.game');
+    const playerOne = document.querySelector('#player1');
+    const playerTwo = document.querySelector('#player2');
+    const playerTurn = document.querySelector('.player-turn');
 
     boardSquares.forEach( (square) => {
         square.addEventListener('click', (e) => {
             squarePosition = e.target.dataset.square;
-
-            if (countX === countO && square.textContent === ""){
-                game.gameboard[squarePosition] = "X";
-                square.textContent = "X"
-            };
-            if (countX > countO && square.textContent === ""){
-                game.gameboard[squarePosition] = "O";
-                square.textContent = "O"
-            };
+            
+            if (game.playPossible === true){
+                if (countX === countO && square.textContent === ""){
+                    game.gameboard[squarePosition] = "X";
+                    square.textContent = "X"
+                    playerTurn.textContent = `${game.players[1].name}'s turn!`
+                };
+                if (countX > countO && square.textContent === ""){
+                    game.gameboard[squarePosition] = "O";
+                    square.textContent = "O"
+                    playerTurn.textContent = `${game.players[0].name}'s turn!`
+                };
+            }
             
             game.updateCounter();
 
             const winner = game.checkForWinner();
             
             if (winner != undefined){
-                console.log(winner + ' wins!')
+                if (winner === "X"){
+                    playerTurn.textContent = `${game.players[0].name} wins!`
+                }else{
+                    playerTurn.textContent = `${game.players[1].name} wins!`
+                }
+                game.playPossible = false;
             }
-
         });
     });
 
@@ -83,9 +91,10 @@ const displayController = (() => {
         e.preventDefault();
         initialScreen.style.animationName = 'slideOut';
         setTimeout(() => {initialScreen.style.visibility = 'hidden'}, 1000);
-        gameBoardDiv.style.visibility = 'visible';
+        gameDiv.style.visibility = 'visible';
         createPlayer(`${playerOne.value}`, 'X');
         createPlayer(`${playerTwo.value}`, 'O');
+        playerTurn.textContent = `${playerOne.value}'s Turn!`;
     })
 
     return { }
