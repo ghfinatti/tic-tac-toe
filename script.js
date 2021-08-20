@@ -2,14 +2,7 @@ const game = (() => {
     let players = [];
     let gameboard = ["","","","","","","","",""];
     let playPossible = true;
-  
-    const updateCounter = () => {
-        countX = gameboard.filter(marker => marker === "X").length
-        countO = gameboard.filter(marker => marker === "O").length
-        return countX, countO
-    }
-    
-    updateCounter();
+    let counter = 0
 
     const checkForWinner = () => {
         if (gameboard[0] != "" && gameboard[0] === gameboard[1] && gameboard[0] === gameboard[2]){
@@ -33,7 +26,7 @@ const game = (() => {
         if (gameboard[0] != "" && gameboard[0] === gameboard[4] && gameboard[0] === gameboard[8]){
             return gameboard[0]
         }
-        if (gameboard[2] != "" && gameboard[2] === gameboard[4] && gameboard[2] === gameboard[5]){
+        if (gameboard[2] != "" && gameboard[2] === gameboard[4] && gameboard[2] === gameboard[6]){
             return gameboard[2]
         }
         if (gameboard.filter(square => square === "").length === 0){
@@ -41,7 +34,18 @@ const game = (() => {
         }
     }
 
-    return { gameboard, players, checkForWinner, updateCounter, playPossible }
+    const resetGame = () => {
+        game.gameboard = ["","","","","","","","",""];
+        game.playPossible = true;
+        game.counter = 0;
+        displayController.boardSquares.forEach( square => {
+            square.textContent = "";
+        });
+        displayController.playerTurn.textContent = `${game.players[0].name}'s turn!`;
+        return game.gameboard, game.playPossible, game.counter;
+    };
+
+    return { gameboard, players, checkForWinner, playPossible, counter, resetGame }
 
 })();
 
@@ -58,29 +62,32 @@ const displayController = (() => {
     boardSquares.forEach( (square) => {
         square.addEventListener('click', (e) => {
             squarePosition = e.target.dataset.square;
-            
+
             if (game.playPossible === true){
-                if (countX === countO && square.textContent === ""){
+                if (game.counter%2 == 0 && square.textContent === ""){
                     game.gameboard[squarePosition] = "X";
                     square.textContent = "X"
                     playerTurn.textContent = `${game.players[1].name}'s turn!`
                 };
-                if (countX > countO && square.textContent === ""){
+                if (game.counter%2 != 0 && square.textContent === ""){
                     game.gameboard[squarePosition] = "O";
                     square.textContent = "O"
                     playerTurn.textContent = `${game.players[0].name}'s turn!`
                 };
+                game.counter ++
             }
-            
-            game.updateCounter();
 
             const winner = game.checkForWinner();
             
             if (winner != undefined){
                 if (winner === "X"){
                     playerTurn.textContent = `${game.players[0].name} wins!`
-                }else{
+                };
+                if (winner === "O"){
                     playerTurn.textContent = `${game.players[1].name} wins!`
+                }
+                if (winner === 'tie'){
+                    playerTurn.textContent = `Tie!`
                 }
                 game.playPossible = false;
             }
@@ -92,17 +99,17 @@ const displayController = (() => {
         initialScreen.style.animationName = 'slideOut';
         setTimeout(() => {initialScreen.style.visibility = 'hidden'}, 1000);
         gameDiv.style.visibility = 'visible';
-        createPlayer(`${playerOne.value}`, 'X');
-        createPlayer(`${playerTwo.value}`, 'O');
+        createPlayer(`${playerOne.value}`, 'X', '0');
+        createPlayer(`${playerTwo.value}`, 'O', '0');
         playerTurn.textContent = `${playerOne.value}'s Turn!`;
     })
 
-    return { }
+    return { boardSquares, playerTurn }
 
 })();
 
-const createPlayer = (name, marker) => {
-    game.players.push({name, marker});
+const createPlayer = (name, marker, score) => {
+    game.players.push({name, marker, score});
 
-    return { name, marker }
+    return { name, marker, score }
 };

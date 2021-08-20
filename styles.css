@@ -14,20 +14,83 @@ body{
     width: 100%;
     border: 0px;
     margin: 0px;
+    background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(226,226,226,1) 0%, rgba(238,238,238,1) 50%, rgba(255,255,255,1) 100%);
+}
+
+.gameboard-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 78%;
+    min-height: 476px;
 }
 
 .game{
     visibility: hidden;
-    height: 80%;
+    height: 100%;
     display:flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
 }
 
 .player-turn{
+    align-self: center;
     font-size: 35px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: black;
+}
+
+.play-buttons{
+    display: flex;
+    justify-content: space-evenly;
+    width: 400px;
+    min-width: 400px;
+}
+
+.game-header-bg{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    background-color: rgba(0,0,0,0.8);
+    width:100%;
+    height: 95%;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.scoreboard{
+    display: flex;
+    flex-direction: row;
+    width: 400px;
+    min-width: 400px;
+    justify-content: space-evenly;
+    color: white;
+    margin: 10px;
+}
+
+.player1-score, .player2-score{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.play-again, .change-players{
+    width: 35%;
+}
+
+.game-header{
+    width: 100%;
+    height: 22%;
+    max-height: 180px;
+    min-height: 170px;
+    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(116,58,213,1) 0%, rgba(213,58,157,1) 100%, rgba(255,255,255,1) 100%);
+}
+
+.sb-title{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    color:white;
 }
 
 #game-board{
@@ -40,6 +103,10 @@ body{
     width: 400px;
     align-self: center;
     border: 1px solid rgba(0,0,0,0.3)
+}
+
+.board-squares:hover{
+    background: linear-gradient(90deg, rgba(255,255,255,0.2) 0%, rgba(116,58,213,0.2) 0%, rgba(213,58,157,0.2) 100%, rgba(255,255,255,0.2) 100%);
 }
 
 #item-1, #item-2, #item-3, #item-4, #item-5, #item-6, #item-7, #item-8, #item-9{
