@@ -2,35 +2,37 @@ const game = (() => {
     let players = [];
     let gameboard = ["","","","","","","","",""];
     let playPossible = true;
-    let counter = 0
+    let counter = 0;
 
-    const checkForWinner = () => {
-        if (gameboard[0] != "" && gameboard[0] === gameboard[1] && gameboard[0] === gameboard[2]){
-            return gameboard[0]
+    const checkForWinner = (gameArray) => {
+        if (gameArray[0] != "" && gameArray[0] === gameArray[1] && gameArray[0] === gameArray[2]){
+            return gameArray[0]
         }
-        if (gameboard[3] != "" && gameboard[3] === gameboard[4] && gameboard[3] === gameboard[5]){
-            return gameboard[3]
+        if (gameArray[3] != "" && gameArray[3] === gameArray[4] && gameArray[3] === gameArray[5]){
+            return gameArray[3]
         }
-        if (gameboard[6] != "" && gameboard[6] === gameboard[7] && gameboard[6] === gameboard[8]){
-            return gameboard[6]
+        if (gameArray[6] != "" && gameArray[6] === gameArray[7] && gameArray[6] === gameArray[8]){
+            return gameArray[6]
         }
-        if (gameboard[0] != "" && gameboard[0] === gameboard[3] && gameboard[0] === gameboard[6]){
-            return gameboard[0]
+        if (gameArray[0] != "" && gameArray[0] === gameArray[3] && gameArray[0] === gameArray[6]){
+            return gameArray[0]
         }
-        if (gameboard[1] != "" && gameboard[1] === gameboard[4] && gameboard[1] === gameboard[7]){
-            return gameboard[1]
+        if (gameArray[1] != "" && gameArray[1] === gameArray[4] && gameArray[1] === gameArray[7]){
+            return gameArray[1]
         }
-        if (gameboard[2] != "" && gameboard[2] === gameboard[5] && gameboard[2] === gameboard[8]){
-            return gameboard[2]
+        if (gameArray[2] != "" && gameArray[2] === gameArray[5] && gameArray[2] === gameArray[8]){
+            return gameArray[2]
         }
-        if (gameboard[0] != "" && gameboard[0] === gameboard[4] && gameboard[0] === gameboard[8]){
-            return gameboard[0]
+        if (gameArray[0] != "" && gameArray[0] === gameArray[4] && gameArray[0] === gameArray[8]){
+            return gameArray[0]
         }
-        if (gameboard[2] != "" && gameboard[2] === gameboard[4] && gameboard[2] === gameboard[6]){
-            return gameboard[2]
+        if (gameArray[2] != "" && gameArray[2] === gameArray[4] && gameArray[2] === gameArray[6]){
+            return gameArray[2]
         }
-        if (gameboard.filter(square => square === "").length === 0){
+        if (gameArray.filter(square => square === "").length === 0){
             return "tie"
+        }else{
+            return ""
         }
     }
 
@@ -42,7 +44,7 @@ const game = (() => {
             square.textContent = "";
         });
         displayController.playerTurn.textContent = `${game.players[0].name}'s turn!`;
-        return game.gameboard, game.playPossible, game.counter;
+        return gameboard, game.playPossible, game.counter;
     };
 
     return { gameboard, players, checkForWinner, playPossible, counter, resetGame }
@@ -56,37 +58,44 @@ const displayController = (() => {
     const gameBoardDiv = document.querySelector('#game-board');
     const gameDiv = document.querySelector('.game');
     const playerOne = document.querySelector('#player1');
+    const playerOneScore = document.querySelector('.player1-score')
     const playerTwo = document.querySelector('#player2');
+    const playerTwoScore = document.querySelector('.player2-score')
     const playerTurn = document.querySelector('.player-turn');
+    const playAgain = document.querySelector('.play-again')
 
     boardSquares.forEach( (square) => {
         square.addEventListener('click', (e) => {
             squarePosition = e.target.dataset.square;
 
             if (game.playPossible === true){
-                if (game.counter%2 == 0 && square.textContent === ""){
+                if (game.counter % 2 == 0 && square.textContent === ""){
                     game.gameboard[squarePosition] = "X";
                     square.textContent = "X"
                     playerTurn.textContent = `${game.players[1].name}'s turn!`
                 };
-                if (game.counter%2 != 0 && square.textContent === ""){
+                if (game.counter % 2 != 0 && square.textContent === ""){
                     game.gameboard[squarePosition] = "O";
                     square.textContent = "O"
                     playerTurn.textContent = `${game.players[0].name}'s turn!`
                 };
                 game.counter ++
             }
-
-            const winner = game.checkForWinner();
             
-            if (winner != undefined){
-                if (winner === "X"){
+            let winner = game.checkForWinner(game.gameboard);
+            
+            if (winner != ""){
+                if (winner == "X"){
                     playerTurn.textContent = `${game.players[0].name} wins!`
+                    game.players[0].score ++
+                    playerOneScore.textContent = `${game.players[0].name}: ${game.players[0].score}`
                 };
-                if (winner === "O"){
+                if (winner == "O"){
                     playerTurn.textContent = `${game.players[1].name} wins!`
+                    game.players[1].score ++
+                    playerTwoScore.textContent = `${game.players[1].name}: ${game.players[1].score}`
                 }
-                if (winner === 'tie'){
+                if (winner == 'tie'){
                     playerTurn.textContent = `Tie!`
                 }
                 game.playPossible = false;
@@ -99,10 +108,14 @@ const displayController = (() => {
         initialScreen.style.animationName = 'slideOut';
         setTimeout(() => {initialScreen.style.visibility = 'hidden'}, 1000);
         gameDiv.style.visibility = 'visible';
-        createPlayer(`${playerOne.value}`, 'X', '0');
-        createPlayer(`${playerTwo.value}`, 'O', '0');
+        createPlayer(`${playerOne.value}`, 'X', 0);
+        createPlayer(`${playerTwo.value}`, 'O', 0);
         playerTurn.textContent = `${playerOne.value}'s Turn!`;
+        playerOneScore.textContent = `${game.players[0].name}: ${game.players[0].score}`
+        playerTwoScore.textContent = `${game.players[1].name}: ${game.players[1].score}`
     })
+
+    playAgain.addEventListener('click', game.resetGame);
 
     return { boardSquares, playerTurn }
 
