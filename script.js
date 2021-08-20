@@ -62,7 +62,8 @@ const displayController = (() => {
     const playerTwo = document.querySelector('#player2');
     const playerTwoScore = document.querySelector('.player2-score')
     const playerTurn = document.querySelector('.player-turn');
-    const playAgain = document.querySelector('.play-again')
+    const playAgain = document.querySelector('.play-again');
+    const changePlayers = document.querySelector('.change-players');
 
     boardSquares.forEach( (square) => {
         square.addEventListener('click', (e) => {
@@ -84,7 +85,7 @@ const displayController = (() => {
             
             let winner = game.checkForWinner(game.gameboard);
             
-            if (winner != ""){
+            if (winner != "" && game.playPossible == true){
                 if (winner == "X"){
                     playerTurn.textContent = `${game.players[0].name} wins!`
                     game.players[0].score ++
@@ -108,14 +109,40 @@ const displayController = (() => {
         initialScreen.style.animationName = 'slideOut';
         setTimeout(() => {initialScreen.style.visibility = 'hidden'}, 1000);
         gameDiv.style.visibility = 'visible';
-        createPlayer(`${playerOne.value}`, 'X', 0);
-        createPlayer(`${playerTwo.value}`, 'O', 0);
+        game.players = [];
+        if (playerOne.value == ""){
+            game.players[0] = createPlayer('Player 1', 'X', 0);
+        }else{
+            game.players[0] = createPlayer(`${playerOne.value}`, 'X', 0);
+        }
+        if (playerTwo.value == ""){
+            game.players[1] = createPlayer('Player 2', 'O', 0);
+        }else{
+            game.players[1] = createPlayer(`${playerTwo.value}`, 'O', 0);
+        }
+        // game.players[0] = createPlayer(`${playerOne.value}`, 'X', 0);
+        // game.players[1] = createPlayer(`${playerTwo.value}`, 'O', 0);
         playerTurn.textContent = `${playerOne.value}'s Turn!`;
         playerOneScore.textContent = `${game.players[0].name}: ${game.players[0].score}`
         playerTwoScore.textContent = `${game.players[1].name}: ${game.players[1].score}`
+        game.resetGame();
     })
 
     playAgain.addEventListener('click', game.resetGame);
+
+    changePlayers.addEventListener('click', () => {
+        gameDiv.style.visibility = 'hidden';
+        initialScreen.style.animationName = 'slideIn';
+        initialScreen.style.visibility = 'visible';
+        initialScreen.animate([
+            { // from
+              opacity: 0,
+            },
+            { // to
+              opacity: 1,
+            }
+          ], 1000);
+    })
 
     return { boardSquares, playerTurn }
 
